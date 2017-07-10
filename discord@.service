@@ -1,0 +1,20 @@
+[Unit]
+Description=Discord with GUI in a container
+Requires=docker.service graphical.target
+After=docker.service
+Wants=display-manager.service NetworkManager-wait-online.service network-online.target
+
+[Service]
+Environment="XAUTHORITY=/home/%i/.Xauthority"
+Environment=DISPLAY=:0
+User=%i
+ExecStartPre=-/usr/bin/docker pull xorilog/discord
+ExecStartPre=-/usr/bin/docker rm -vf discord
+ExecStartPre=/bin/bash -c "xhost +"
+ExecStart=/usr/bin/docker run -i --rm --name discord -v /etc/localtime:/etc/localtime:ro --ipc="host" -v /dev/shm:/dev/shm -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix${DISPLAY} --device /dev/snd --device /dev/snd -v /home/%i/.config/discord:/root/.config/discord xorilog/discord
+ExecStop=/usr/bin/docker rm -vf discord
+ExecStop=/bin/bash -c "xhost -"
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
