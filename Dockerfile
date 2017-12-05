@@ -2,7 +2,7 @@
 FROM debian:jessie
 LABEL maintainer "Christophe Boucharlat <christophe.boucharlat@gmail.com>"
 
-# Discord Version 0.0.1
+# Discord Version 0.0.2
 
 RUN apt-get update && apt-get install -y \
     apt-utils \
